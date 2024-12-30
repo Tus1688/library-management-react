@@ -9,15 +9,15 @@ export default function Homepage() {
 
   return (
     <div>
-    <Suspense fallback={<Skeleton className="h-96 relative" />}>
-    <Await
-      resolve={books}
-      errorElement={<div>error</div>}
-      children={(book: GetBookResponse[]) => (
-        <BookFeed initialData={book} key={book[0]?.id} />
-      )}
-      />
-    </Suspense>
+      <Suspense fallback={<Skeleton className="h-96 relative" />}>
+        <Await
+          resolve={books}
+          errorElement={<div>error</div>}
+          children={(book: GetBookResponse[]) => (
+            <BookFeed initialData={book} key={book[0]?.id} />
+          )}
+        />
+      </Suspense>
     </div>
   );
 }

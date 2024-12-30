@@ -9,6 +9,9 @@ import Homepage from './routes/Homepage.tsx'
 import AdminLayout from './routes/admin/AdminLayout.tsx'
 import { authStatus } from './lib/utils.ts'
 import LoginPage from './routes/login/LoginPage.tsx'
+import { ReqBooking } from './routes/admin/booking/api.ts'
+import BookingPage from './routes/admin/booking/BookingPage.tsx'
+import BookPage from './routes/admin/books/BookPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -18,7 +21,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Homepage />,
-        loader: async () => ReqPublicBook({limit: 20})
+        loader: async () => ReqPublicBook({ limit: 20 })
       },
       {
         path: "/auth/login",
@@ -39,7 +42,19 @@ const router = createBrowserRouter([
             return redirect("/auth/login")
           }
           return null;
-        }
+        },
+        children: [
+          {
+            index: true,
+            element: <BookingPage />,
+            loader: async () => ReqBooking({ limit: 20 })
+          },
+          {
+            path: "book",
+            element: <BookPage />,
+            loader: async () => ReqPublicBook({ limit: 20 })
+          }
+        ]
       }
     ]
   },
