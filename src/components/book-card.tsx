@@ -9,7 +9,7 @@ function bookcardComponent({
     return (
         <div className="border-x border-b py-3.5 px-4 flex flex-row gap-2 md:gap-5 text-wrap break-all">
             <div className="min-w-28 min-h-36 sm:min-h-48 bg-primary text-wrap break-all p-4 rounded-md flex-1 justify-center items-center flex">
-                <div className="text-primary-foreground pb-12 font-mono font-bold text-sm text-center">
+                <div className="text-primary-foreground pb-12 font-mono font-bold text-center text-xs">
                     <h1>{book.title}</h1>
                 </div>
             </div>

@@ -1,6 +1,6 @@
-import { Outlet } from "react-router";
-import { ModeToggle } from "./components/mode-toggle";
-import { Toaster } from "./components/ui/toaster";
+import { Link, Outlet } from "react-router";
+import { ModeToggle } from "../components/mode-toggle";
+import { Toaster } from "../components/ui/toaster";
 
 function HomepageLayout() {
   return (
@@ -8,7 +8,12 @@ function HomepageLayout() {
       <div className="max-w-screen-lg w-screen h-full ">
         <div className="flex justify-between align-center py-2 sticky top-0 z-10 bg-background px-2 lg:px-0">
           <h1 className="font-mono font-bold text-2xl">Dream Library</h1>
-          <ModeToggle />
+          <div className="flex gap-4 items-center">
+            <Link to='/admin' className="font-mono text-sm">
+              Admin Page
+            </Link>
+            <ModeToggle />
+          </div>
         </div>
         <Outlet />
         <Toaster />
