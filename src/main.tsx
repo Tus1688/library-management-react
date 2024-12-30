@@ -4,6 +4,8 @@ import './index.css'
 import HomepageLayout from './HomepageLayout.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { ThemeProvider } from './components/theme-provider.tsx'
+import { ReqPublicBook } from './routes/api.ts'
+import Homepage from './routes/Homepage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -12,18 +14,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <h1>this is index</h1>
+        element: <Homepage />,
+        loader: async () => ReqPublicBook({limit: 20})
       },
-      {
-        path: "/bla",
-        element: <div>bla</div>
-      }
     ]
   },
-  {
-    path: '/login',
-    element: <div>login</div>
-  }
 ])
 
 createRoot(document.getElementById('root')!).render(
