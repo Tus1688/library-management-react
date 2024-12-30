@@ -15,6 +15,7 @@ import BookPage from './routes/admin/books/BookPage.tsx'
 import RootErrorPage from './components/root-error-page.tsx'
 import { ReqGetEmployee } from './routes/admin/employee/api.ts'
 import EmployeePage from './routes/admin/employee/EmployeePage.tsx'
+import LogoutPage from './routes/logout/LogoutPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,16 @@ const router = createBrowserRouter([
 
           return null;
         },
+      },
+      {
+        path: "/auth/logout",
+        element: <LogoutPage />,
+        loader: () => {
+          if (!authStatus()) {
+            return redirect("/admin")
+          }
+          return null;
+        }
       },
       {
         path: "/admin",

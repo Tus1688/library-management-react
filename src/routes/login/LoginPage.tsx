@@ -10,6 +10,7 @@ import { Icons } from "@/components/icons";
 import { ReqLogin } from "./api";
 import { useNavigate } from "react-router";
 import { ErrorResponse } from "@/types/api";
+import { useAuthState } from "@/hooks/use-authenticated";
 
 const FormSchema = z.object({
     username: z.string().min(1, {
@@ -24,6 +25,8 @@ export default function LoginPage() {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const { setAuthenticated } = useAuthState();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -45,6 +48,7 @@ export default function LoginPage() {
                     title: `Welcome back, ${data.username}`
                 })
                 navigate("/admin");
+                setAuthenticated(true);
             }
         } catch(error) {
             const errorRes = error as ErrorResponse;

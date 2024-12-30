@@ -10,7 +10,6 @@ export default function RootErrorPage() {
     useEffect(() => {
         if (error.status === 401) {
             navigate("/auth/login");
-            console.log("redirecting to login page");
         }
     });
 

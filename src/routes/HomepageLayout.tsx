@@ -2,9 +2,11 @@ import { Link, Outlet, useLocation } from "react-router";
 import { ModeToggle } from "../components/mode-toggle";
 import { Toaster } from "../components/ui/toaster";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 function HomepageLayout() {
   const location = useLocation();
+  const [isAuthenticated, setAuthenticated] = useState(false);
 
   return (
     <div className="lg:space-x-6 flex flex-row items-start justify-center w-full min-h-dvh font-sans antialiased bg-background">
@@ -21,10 +23,13 @@ function HomepageLayout() {
             <Link to='/admin/employee' className={cn("font-mono text-sm", location.pathname === "/admin/employee" ? "font-bold" : "")}>
               Admin
             </Link>
+            {isAuthenticated? (
+              <Link to="/auth/logout" className="font-mono text-sm">Logout</Link>
+            ) : null}
             <ModeToggle />
           </div>
         </div>
-        <Outlet />
+        <Outlet context={{ isAuthenticated, setAuthenticated }}/>
         <Toaster />
       </div>
     </div>
