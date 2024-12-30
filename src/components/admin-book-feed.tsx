@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import UpdateBookForm from "./update-book-form";
+import CreateBookingForm from "./create-booking-form";
 
 export default function AdminBookFeed({
     initialData,
@@ -120,15 +121,25 @@ function TableRowData({ data }: { data: GetBookResponse }) {
             )}</TableCell>
             <TableCell>{new Date(data.created_at).toLocaleString()}</TableCell>
             <TableCell>{new Date(data.updated_at).toLocaleString()}</TableCell>
-            <TableCell>
+            <TableCell className="flex gap-2">
                 <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger>
-                        <Button>
+                        <Button size={"sm"}>
                             Update
                         </Button>
                     </SheetTrigger>
                     <SheetContent>
                         <UpdateBookForm data={data} setOpen={setOpen} />
+                    </SheetContent>
+                </Sheet>
+                <Sheet open={open} onOpenChange={setOpen}>
+                    <SheetTrigger disabled={data.is_booked}>
+                        <Button size={"sm"} disabled={data.is_booked}>
+                            Booking
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                        <CreateBookingForm data={data} setOpen={setOpen} />
                     </SheetContent>
                 </Sheet>
             </TableCell>
