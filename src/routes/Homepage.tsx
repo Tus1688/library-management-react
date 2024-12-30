@@ -8,16 +8,18 @@ export default function Homepage() {
   const books = useLoaderData() as GetBookResponse[];
 
   return (
-    <div>
-      <Suspense fallback={<Skeleton className="h-96 relative" />}>
-        <Await
-          resolve={books}
-          errorElement={<div>error</div>}
-          children={(book: GetBookResponse[]) => (
-            <BookFeed initialData={book} key={book[0]?.id} />
-          )}
-        />
-      </Suspense>
+    <div className="w-full flex items-center justify-center">
+      <div className="max-w-screen-lg">
+        <Suspense fallback={<Skeleton className="h-96 relative" />}>
+          <Await
+            resolve={books}
+            errorElement={<div>error</div>}
+            children={(book: GetBookResponse[]) => (
+              <BookFeed initialData={book} key={book[0]?.id} />
+            )}
+          />
+        </Suspense>
+      </div>
     </div>
   );
 }

@@ -36,3 +36,12 @@ export async function ReqUpdateBook(data: {
 
     return makeRequestWithRetryReturnBoolean(makeRequest);
 }
+export async function ReqDeleteBook(id: string): Promise<boolean | undefined> {
+    const makeRequest = async () => {
+        return await fetch(`/api/v1/collections/dashboard/book?id=${id}`, {
+            method: "DELETE",
+        })
+    }
+
+    return makeRequestWithRetryReturnBoolean(makeRequest);
+}

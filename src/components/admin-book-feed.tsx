@@ -9,6 +9,10 @@ import { Badge } from "./ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import UpdateBookForm from "./update-book-form";
 import CreateBookingForm from "./create-booking-form";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import { useRevalidator } from "react-router";
+import { Trash2Icon } from "lucide-react";
+import { ReqDeleteBook } from "@/routes/admin/books/api";
 
 export default function AdminBookFeed({
     initialData,
@@ -108,8 +112,35 @@ export default function AdminBookFeed({
 }
 
 function TableRowData({ data }: { data: GetBookResponse }) {
+    const {toast} = useToast();
+    const revalidate = useRevalidator();
     const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const [openBooking, setOpenBooking] = useState(false);
+
+    async function handleDelete(id: string)  {
+        try {
+            const res = await ReqDeleteBook(id);
+
+            if (res) {
+                toast({
+                    title: "book deleted"
+                })
+                revalidate.revalidate()
+                setOpenDelete(false);
+            }
+        } catch (error) {
+            const errorRes = error as ErrorResponse
+            if (errorRes.error) {
+                toast({
+                    title: "Error on deleting",
+                    description: `${errorRes.error}`,
+                    variant: "destructive"
+                })
+            }
+        }
+    }
+
     return (
         <TableRow>
             <TableCell className="max-w-96 break-all">{data.title}</TableCell>
@@ -133,6 +164,25 @@ function TableRowData({ data }: { data: GetBookResponse }) {
                         <UpdateBookForm data={data} setOpen={setOpenUpdate} />
                     </SheetContent>
                 </Sheet>
+                <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+                <AlertDialogTrigger>
+                        <Button size={"icon"} variant={"destructive"}>
+                            <Trash2Icon size={24} />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will delete the book forever.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(data.id)}>Delete</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
                 <Sheet open={openBooking} onOpenChange={setOpenBooking}>
                     <SheetTrigger disabled={data.is_booked}>
                         <Button size={"sm"} disabled={data.is_booked}>
