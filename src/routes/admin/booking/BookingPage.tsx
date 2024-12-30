@@ -1,4 +1,5 @@
 import BookingFeed from "@/components/booking-feed";
+import ErrorPage from "@/components/error-page";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetBookingResponse } from "@/types/booking";
 import { Suspense } from "react";
@@ -12,7 +13,7 @@ export default function BookingPage() {
             <Suspense fallback={<Skeleton className="h-96 relative" />}>
                 <Await
                     resolve={bookings}
-                    errorElement={<div>error</div>}
+                    errorElement={<ErrorPage />}
                     children={(booking: GetBookingResponse[]) => (
                         <BookingFeed initialData={booking} key={crypto.randomUUID()} />
                     )}

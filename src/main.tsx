@@ -12,11 +12,15 @@ import LoginPage from './routes/login/LoginPage.tsx'
 import { ReqBooking } from './routes/admin/booking/api.ts'
 import BookingPage from './routes/admin/booking/BookingPage.tsx'
 import BookPage from './routes/admin/books/BookPage.tsx'
+import RootErrorPage from './components/root-error-page.tsx'
+import { ReqGetEmployee } from './routes/admin/employee/api.ts'
+import EmployeePage from './routes/admin/employee/EmployeePage.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <HomepageLayout />,
+    errorElement: <RootErrorPage />,
     children: [
       {
         index: true,
@@ -53,6 +57,11 @@ const router = createBrowserRouter([
             path: "book",
             element: <BookPage />,
             loader: async () => ReqPublicBook({ limit: 20 })
+          },
+          {
+            path: "employee",
+            element: <EmployeePage />,
+            loader: async() => ReqGetEmployee()
           }
         ]
       }

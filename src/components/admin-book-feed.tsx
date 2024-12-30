@@ -11,7 +11,7 @@ import UpdateBookForm from "./update-book-form";
 import CreateBookingForm from "./create-booking-form";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 import { useRevalidator } from "react-router";
-import { Trash2Icon } from "lucide-react";
+import { Edit2Icon, Trash2Icon } from "lucide-react";
 import { ReqDeleteBook } from "@/routes/admin/books/api";
 
 export default function AdminBookFeed({
@@ -147,7 +147,7 @@ function TableRowData({ data }: { data: GetBookResponse }) {
             <TableCell className="max-w-96 break-all">{data.author}</TableCell>
             <TableCell className="max-w-96 break-all">{data.description}</TableCell>
             <TableCell>{data.booked_until ? (
-                <>{new Date(data.booked_until).toLocaleString()}</>
+                <Badge variant="destructive">{new Date(data.booked_until).toLocaleString()}</Badge>
             ) : (
                 <Badge>Not booked</Badge>
             )}</TableCell>
@@ -156,8 +156,8 @@ function TableRowData({ data }: { data: GetBookResponse }) {
             <TableCell className="flex gap-2">
                 <Sheet open={openUpdate} onOpenChange={setOpenUpdate}>
                     <SheetTrigger>
-                        <Button size={"sm"}>
-                            Update
+                        <Button size={"icon"}>
+                            <Edit2Icon size={24} />
                         </Button>
                     </SheetTrigger>
                     <SheetContent>

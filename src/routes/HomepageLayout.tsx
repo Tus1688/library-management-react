@@ -18,8 +18,8 @@ function HomepageLayout() {
             <Link to='/admin/book' className={cn("font-mono text-sm", location.pathname === "/admin/book" ? "font-bold" : "")}>
               Books
             </Link>
-            <Link to='/admin' className="font-mono text-sm">
-              Admin Page
+            <Link to='/admin/employee' className={cn("font-mono text-sm", location.pathname === "/admin/employee" ? "font-bold" : "")}>
+              Admin
             </Link>
             <ModeToggle />
           </div>

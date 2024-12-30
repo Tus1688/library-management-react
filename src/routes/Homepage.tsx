@@ -1,4 +1,5 @@
 import BookFeed from "@/components/book-feed";
+import ErrorPage from "@/components/error-page";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetBookResponse } from "@/types/book";
 import { Suspense } from "react";
@@ -13,7 +14,7 @@ export default function Homepage() {
         <Suspense fallback={<Skeleton className="h-96 relative" />}>
           <Await
             resolve={books}
-            errorElement={<div>error</div>}
+            errorElement={<ErrorPage />}
             children={(book: GetBookResponse[]) => (
               <BookFeed initialData={book} key={book[0]?.id} />
             )}
