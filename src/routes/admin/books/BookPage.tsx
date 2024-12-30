@@ -28,7 +28,7 @@ export default function BookPage() {
                     resolve={books}
                     errorElement={<div>error</div>}
                     children={(books: GetBookResponse[]) => (
-                        <AdminBookFeed initialData={books} key={books[0]?.id} />
+                        <AdminBookFeed initialData={books} key={crypto.randomUUID()} />
                     )}
                 />
             </Suspense>

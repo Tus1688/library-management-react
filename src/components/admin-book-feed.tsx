@@ -6,6 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import UpdateBookForm from "./update-book-form";
 
 export default function AdminBookFeed({
     initialData,
@@ -105,6 +107,7 @@ export default function AdminBookFeed({
 }
 
 function TableRowData({ data }: { data: GetBookResponse }) {
+    const [open, setOpen] = useState(false);
     return (
         <TableRow>
             <TableCell className="max-w-96 break-all">{data.title}</TableCell>
@@ -117,6 +120,18 @@ function TableRowData({ data }: { data: GetBookResponse }) {
             )}</TableCell>
             <TableCell>{new Date(data.created_at).toLocaleString()}</TableCell>
             <TableCell>{new Date(data.updated_at).toLocaleString()}</TableCell>
+            <TableCell>
+                <Sheet open={open} onOpenChange={setOpen}>
+                    <SheetTrigger>
+                        <Button>
+                            Update
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                        <UpdateBookForm data={data} setOpen={setOpen} />
+                    </SheetContent>
+                </Sheet>
+            </TableCell>
         </TableRow>
     )
 }

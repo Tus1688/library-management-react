@@ -1,17 +1,19 @@
-import { useToast } from '@/hooks/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRevalidator } from 'react-router';
-import { z } from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { Icons } from './icons';
-import { ReqCreateBook } from '@/routes/admin/books/api';
-import { ErrorResponse } from '@/types/api';
+import { useToast } from "@/hooks/use-toast";
+import { GetBookResponse } from "@/types/book"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRevalidator } from "react-router";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Icons } from "./icons";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { ErrorResponse } from "@/types/api";
+import { ReqUpdateBook } from "@/routes/admin/books/api";
 
 const FormSchema = z.object({
+    id: z.string(),
     title: z.string().min(1, {
         message: "Title must be at least 1 characters"
     }),
@@ -23,10 +25,13 @@ const FormSchema = z.object({
     }),
 })
 
-export default function CreateBookForm({
-    setOpen
+
+export default function UpdateBookForm({
+    setOpen,
+    data,
 }: {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    data: GetBookResponse;
 }) {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
@@ -35,21 +40,22 @@ export default function CreateBookForm({
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            title: "",
-            author: "",
-            description: ""
-        },
+            id: data.id,
+            title: data.title,
+            author: data.author,
+            description: data.description
+        }
     })
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         setIsLoading(true);
 
         try {
-            const res = await ReqCreateBook(data);
+            const res = await ReqUpdateBook(data);
 
-            if (res?.id) {
+            if (res) {
                 toast({
-                    title: "book added to collections"
+                    title: "book updated"
                 })
                 revalidate.revalidate()
                 setOpen(false);
@@ -58,7 +64,7 @@ export default function CreateBookForm({
             const errorRes = error as ErrorResponse
             if (errorRes.error) {
                 toast({
-                    title: "Error on creating",
+                    title: "Error on updating",
                     description: `${errorRes.error}`,
                     variant: "destructive"
                 })
@@ -111,7 +117,7 @@ export default function CreateBookForm({
                     />
                     <Button type="submit" className="mt-5">
                         {isLoading ?? <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-                        Add
+                        Update
                     </Button>
                 </form>
             </Form>
