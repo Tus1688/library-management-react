@@ -21,6 +21,7 @@ export default function LogoutPage() {
                 })
                 navigate("/")
                 setAuthenticated(false);
+                localStorage.setItem("isLoggedIn", "false");
             }
         } catch(error) {
             const err = error as ErrorResponse;
@@ -34,13 +35,15 @@ export default function LogoutPage() {
     }
 
     return (
-        <div className="w-full flex justify-center items-center flex-col gap-5">
+        <div className="w-full flex justify-center items-center flex-col">
+            <div className="border flex flex-col justify-center items-center gap-5 p-4 rounded-md">
             <h1 className="pt-5">
                 Are you sure you want to logout?
             </h1>
-            <Button onClick={() => handleLogout()}>
+            <Button onClick={() => handleLogout()} variant={"destructive"} className="w-full">
                 Logout
             </Button>
+            </div>
         </div>
     );
 }
