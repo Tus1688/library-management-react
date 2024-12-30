@@ -108,7 +108,8 @@ export default function AdminBookFeed({
 }
 
 function TableRowData({ data }: { data: GetBookResponse }) {
-    const [open, setOpen] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openBooking, setOpenBooking] = useState(false);
     return (
         <TableRow>
             <TableCell className="max-w-96 break-all">{data.title}</TableCell>
@@ -122,24 +123,24 @@ function TableRowData({ data }: { data: GetBookResponse }) {
             <TableCell>{new Date(data.created_at).toLocaleString()}</TableCell>
             <TableCell>{new Date(data.updated_at).toLocaleString()}</TableCell>
             <TableCell className="flex gap-2">
-                <Sheet open={open} onOpenChange={setOpen}>
+                <Sheet open={openUpdate} onOpenChange={setOpenUpdate}>
                     <SheetTrigger>
                         <Button size={"sm"}>
                             Update
                         </Button>
                     </SheetTrigger>
                     <SheetContent>
-                        <UpdateBookForm data={data} setOpen={setOpen} />
+                        <UpdateBookForm data={data} setOpen={setOpenUpdate} />
                     </SheetContent>
                 </Sheet>
-                <Sheet open={open} onOpenChange={setOpen}>
+                <Sheet open={openBooking} onOpenChange={setOpenBooking}>
                     <SheetTrigger disabled={data.is_booked}>
                         <Button size={"sm"} disabled={data.is_booked}>
                             Booking
                         </Button>
                     </SheetTrigger>
                     <SheetContent>
-                        <CreateBookingForm data={data} setOpen={setOpen} />
+                        <CreateBookingForm data={data} setOpen={setOpenBooking} />
                     </SheetContent>
                 </Sheet>
             </TableCell>

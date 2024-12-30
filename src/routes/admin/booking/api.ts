@@ -1,5 +1,5 @@
 import { GetBookingResponse } from "@/types/booking";
-import { makeRequestWithRetryReturnValue, makeRequestWithRetrySilent404 } from "../../api";
+import { makeRequestWithRetryReturnBoolean, makeRequestWithRetryReturnValue, makeRequestWithRetrySilent404 } from "../../api";
 
 export async function ReqBooking(data: {
     limit?: number;
@@ -37,4 +37,17 @@ export async function ReqCreateBooking(data: {
     }
 
     return makeRequestWithRetryReturnValue<{id: string}>(makeRequest);
+}
+
+export async function ReqReturnBook(id: string): Promise<boolean | undefined> {
+    const makeRequest = async() => {
+        return await fetch(`/api/v1/collections/dashboard/return?id=${id}`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+    }
+
+    return makeRequestWithRetryReturnBoolean(makeRequest);
 }

@@ -1,11 +1,15 @@
 import { useToast } from "@/hooks/use-toast";
-import { ReqBooking } from "@/routes/admin/booking/api";
+import { ReqBooking, ReqReturnBook } from "@/routes/admin/booking/api";
 import { ErrorResponse } from "@/types/api";
 import { GetBookingResponse } from "@/types/booking";
 import { useEffect, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import UpdateBookForm from "./update-book-form";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import { useRevalidator } from "react-router";
 
 export default function BookingFeed({
     initialData,
@@ -79,7 +83,7 @@ export default function BookingFeed({
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Book Title</TableHead>
+                        <TableHead className="max-w-96 break-all">Book Title</TableHead>
                         <TableHead>Book Author</TableHead>
                         <TableHead>Customer Name</TableHead>
                         <TableHead>Customer Phone</TableHead>
@@ -109,9 +113,36 @@ export default function BookingFeed({
 }
 
 function TableRowData({ data }: { data: GetBookingResponse }) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    const revalidate = useRevalidator();
+
+    async function handleReturn(id: string) {
+        try {
+            const res = await ReqReturnBook(id);
+
+            if (res) {
+                toast({
+                    title: "book set to returned"
+                })
+                revalidate.revalidate()
+                setOpen(false);
+            }
+        } catch (error) {
+            const errorRes = error as ErrorResponse
+            if (errorRes.error) {
+                toast({
+                    title: "Error on updating",
+                    description: `${errorRes.error}`,
+                    variant: "destructive"
+                })
+            }
+        }
+    }
+
     return (
         <TableRow>
-            <TableCell>{data.book_title}</TableCell>
+            <TableCell className="max-w-96 break-all">{data.book_title}</TableCell>
             <TableCell>{data.book_author}</TableCell>
             <TableCell>{data.customer_name}</TableCell>
             <TableCell>{data.customer_phone}</TableCell>
@@ -124,6 +155,29 @@ function TableRowData({ data }: { data: GetBookingResponse }) {
             <TableCell>{new Date(data.created_at).toLocaleString()}</TableCell>
             <TableCell>{new Date(data.updated_at).toLocaleString()}</TableCell>
             <TableCell>{data.updated_by}</TableCell>
+            <TableCell>
+                <AlertDialog open={open} onOpenChange={setOpen}>
+                    <AlertDialogTrigger disabled={data.is_returned}>
+                        <Button size={"sm"} disabled={data.is_returned}>
+                            Return
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. 
+                                This will mark this book to be returned and update the booking status.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleReturn(data.id)}>Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+
+            </TableCell>
         </TableRow>
     )
 }

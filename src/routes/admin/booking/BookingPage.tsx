@@ -14,7 +14,7 @@ export default function BookingPage() {
                     resolve={bookings}
                     errorElement={<div>error</div>}
                     children={(booking: GetBookingResponse[]) => (
-                        <BookingFeed initialData={booking} key={booking[0]?.id} />
+                        <BookingFeed initialData={booking} key={crypto.randomUUID()} />
                     )}
                 />
             </Suspense>
